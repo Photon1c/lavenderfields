@@ -1,4 +1,4 @@
-Bibliography (relevant and interesting reads)
+## Bibliography (relevant and interesting reads)
 
 
 Alan S. Blinder. Central Banking in Theory and Practice. 1998. Massachusetts Institute Of Technology , Massachusetts.
