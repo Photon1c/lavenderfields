@@ -1,0 +1,149 @@
+<!--layout for web page that displays the following three spaces:-->
+<!--a)terminal, b)table), chart-->
+<!--uses jquery-->
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        /* Adjust the height for the table to take up a third of the available space */
+        #terminal, #table, #chart {
+            height: calc(33% - 1px); /* Subtract 1px for borders or padding */
+            overflow: auto;
+        }
+    </style>
+    <!-- Include external scripts and styles -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+    <script src="https://cdn.jsdelivr.net/npm/luxon@2.0.1/build/global/luxon.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery.terminal/js/jquery.terminal.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jquery.terminal/css/jquery.terminal.min.css" />
+    <!-- Include Axios library -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body>
+    <div id="terminal" style="height: calc(33% - 1px);">
+        <h2>Terminal</h2>
+    </div>
+    <div id="table" style="height: calc(33% - 1px);">
+        <h2>Table</h2>
+    </div>
+    <div id="chart" style="height: calc(33% - 1px);">
+        <h2>Chart</h2>
+    </div>
+    <script>
+        const terminalOptions = {
+            // ...
+        };
+
+        const terminalCommands = {
+            hello: function (what) {
+                this.echo('Hello, ' + what + '. Welcome to this terminal.');
+            },
+            showFirst10Rows: function () {
+                // Fetch data from the API endpoint
+                axios.get('<data-endpoint-user-defined-goes-here>')
+                    .then(response => {
+                        const tableData = response.data.slice(0, 10); // Get the first 10 rows
+
+                        // Create table element and add it to the table container
+                        const tableContainer = document.getElementById('table');
+                        const table = renderTable(tableData); // Use the renderTable function
+                        tableContainer.innerHTML = ''; // Clear previous content
+                        tableContainer.appendChild(table); // Append the new table
+
+                        // Plot the data as a line chart
+                        plotLineChart(response.data);
+                    })
+                    .catch(error => {
+                        console.error('Error fetching data:', error);
+                    });
+            },
+            cat: function () {
+                this.echo($('<img src="https://placekitten.com/408/287">'));
+            },
+            // ... other terminal commands ...
+        };
+
+        // Initialize the terminal with commands
+        const terminalContainer = document.getElementById('terminal');
+        $(terminalContainer).terminal(terminalCommands, {
+            greetings: 'My First Web Terminal'
+        });
+
+        // Function to render table
+        function renderTable(data) {
+            const table = document.createElement('table');
+            table.className = 'table';
+            const tableHead = document.createElement('thead'); // Create thead element
+            const tableBody = document.createElement('tbody');
+
+            // Create table headers
+            const headerRow = document.createElement('tr');
+            ['Date', 'Adj Close', ' Volume ', 'Open', 'High', 'Low'].forEach(headerText => {
+                const headerCell = document.createElement('th');
+                headerCell.textContent = headerText;
+                headerRow.appendChild(headerCell);
+            });
+            tableHead.appendChild(headerRow);
+
+            // Populate table rows
+            data.forEach(rowData => {
+                const row = document.createElement('tr');
+                ['Date', 'Adj Close', ' Volume ', 'Open', 'High', 'Low'].forEach(columnKey => {
+                    const cell = document.createElement('td');
+                    cell.textContent = rowData[columnKey];
+                    row.appendChild(cell);
+                });
+                tableBody.appendChild(row);
+            });
+
+            table.appendChild(tableHead);
+            table.appendChild(tableBody);
+            return table;
+        }
+
+        function plotLineChart(data) {
+            const chartContainer = document.getElementById('chart');
+            chartContainer.innerHTML = ''; // Clear previous content
+
+            // Create canvas element for the chart
+            const canvas = document.createElement('canvas');
+            chartContainer.appendChild(canvas);
+
+            new Chart(canvas, {
+                type: 'line',
+                data: {
+                    labels: data.map(row => row['Date']),
+                    datasets: [{
+                        label: 'Adj Close',
+                        data: data.map(row => ({
+                            x: row['Date'],
+                            y: parseFloat(row['Adj Close'])
+                        })),
+                        borderColor: 'blue',
+                        fill: false
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            type: 'time', // Use 'time' scale
+                            time: {
+                                unit: 'day', // You can adjust this based on your data
+                                tooltipFormat: 'yyyy-MM-dd' // Tooltip date format
+                            }
+                        },
+                        y: {
+                            beginAtZero: false
+                        }
+                    }
+                }
+            });
+        }
+
+    </script>
+</body>
+</html>
