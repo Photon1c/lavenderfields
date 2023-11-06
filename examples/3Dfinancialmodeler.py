@@ -1,10 +1,10 @@
 #Simulate an income statement and visualize it in 3D
-#Use prevailing market rates
 import vtk
 import time
+import imageio
 
 
-time_scale = "daily"  # Time scale (you can set it to your desired timescale)
+time_scale = "weekly"  # Time scale (you can set it to your desired timescale)
 
 # Function to create a sphere with a given radius
 def create_sphere(radius, color, position):
@@ -22,10 +22,7 @@ def create_sphere(radius, color, position):
     return actor
 
 def update_revenue_and_expenses(debt, revenue, expenses, iteration, time_scale):
-
-    #.8 rate used for both debt service and expenses values, adjust as desired
-
-  
+    
     apr = 0.25  # Annual Percentage Rate
     monthly_apr = apr / 12  # Monthly interest rate
     daily_apr = monthly_apr/30
@@ -98,9 +95,12 @@ def update_revenue_and_expenses(debt, revenue, expenses, iteration, time_scale):
     return debt, revenue, expenses, net_income
 
 # Initialize variables
-debt = 20000  # Initial debt value
+debt = 100000  # Initial debt value
 revenue = 0
 expenses = 0
+#debt_service = .8 * revenue
+#debt -= debt_service
+#how does debt_service change according to time scale? 
 
 
 # Create renderer
@@ -143,6 +143,9 @@ loop_count = 10  # Number of times to loop the animation
 
 loop_iteration = 0
 
+# Initialize variables for GIF creation
+image_list = []
+
 # Update function
 def update():
     global debt, revenue, expenses, net_income, loop_iteration, start_time
@@ -163,10 +166,30 @@ def update():
 
     loop_iteration += 1
     
-    #set loop
     #if loop_iteration >= animation_steps:
         #loop_iteration = 0
 
+    if debt <= 0:
+        interactor.DestroyTimer(timer_id)  # Stop the timer when debt is zero or less
+        print("Debt reached zero or below. Stopping the animation.")
+        imageio.mimsave("F:\valuation_models\output\animation.gif", image_list)
+        
+    else:
+        # Capture the current frame and append it to the list
+        w2if = vtk.vtkWindowToImageFilter()
+        w2if.SetInput(render_window)
+        w2if.Update()
+        writer = vtk.vtkPNGWriter()
+        writer.SetInputConnection(w2if.GetOutputPort())
+        filename = f"F:\valuation_models\output\frame_{loop_iteration}.png"
+        writer.SetFileName(filename)
+        writer.Write()
+
+        # Append the filename to the list
+        image_list.append(filename)    
+
+    render_window.Render()
+    
     # Check if 30 seconds have passed
     #current_time = time.time()
     #if current_time - start_time >= 30:
@@ -181,3 +204,14 @@ interactor.AddObserver('TimerEvent', lambda caller, event: update())
 
 # Start the interactor
 interactor.Start()
+
+#Save GIF
+# Set up the animation scene writer to save the animation as a GIF
+writer = vtk.vtkAnimationSceneImageWriter()
+writer.SetFileName("F:\valuation_models\output\animation.gif")
+writer.SetFrameRate(30)  # Set the frame rate for the GIF
+
+# Start the render and the writer
+writer.SetInput(render_window)
+writer.Write()
+
