@@ -1,4 +1,4 @@
 # The Lavender Fields Project
-A collection of script examples using Azure, Vercel, OpenAI, Pinecone and other modules.
+A collection of scripts, models, and simple functions to aid in data analysis and advanced natural system processing frameworks.
 
 ![ai photo of lavender fields](../img/lavenderfields.png)
