@@ -1,3 +1,5 @@
+## Index
+
 PredictiveCSVModelFitter.ipynb- Fits historical stock data (default Nasdaq format).
 LongShortTermMemoryNNStocks.ipynb- Predicts stock price.
 AdversarialNeuralNetwork.ipynb- Evolves two models in contentious states.
