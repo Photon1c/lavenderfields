@@ -6,4 +6,4 @@ New cover photo:
 
 
 Old cover photo:  
-![ai photo of lavender fields](../img/lavenderfields_old.png)  
+![ai photo of lavender fields](../img/lavenderfields.png)  
