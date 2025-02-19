@@ -3,7 +3,7 @@ A collection of scripts, models, and simple functions to aid in data analysis an
 
 ### Update 2.18.25 -   
 
-AI Pilot Script [now available](scripts/AI_pilot.py). Using recursive learning, this experimental script trains a model to pilot a vehicle and a avoid obstacles using recursive learning. 
+AI Pilot Script [now available](../scripts/AI_pilot.py). Using recursive learning, this experimental script trains a model to pilot a vehicle and a avoid obstacles using recursive learning. 
 
 New cover photo:  
 ![new ai photo of lavender fields](../img/lavenderfields_new.png)  
