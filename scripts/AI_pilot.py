@@ -1,4 +1,4 @@
-#Deploy a recursive learning algorith to train AI pilot avoid obstacles.
+#Deploy a recursive learning algorithm to train AI pilot avoid obstacles.
 import pygame
 import numpy as np
 import random
