@@ -56,7 +56,7 @@ environment = TinyWorld("Corner Cafe", [persona, personb])
 environment.make_everyone_accessible()
 
 # AI-driven conversation
-prompt = "Leslie and Ashley are discussing the best places to network with other people."
+prompt = "Enrique and Trisha are discussing the best places to network with other people."
 ai_response = get_gpt_response(prompt)
 
 persona.listen(ai_response)
